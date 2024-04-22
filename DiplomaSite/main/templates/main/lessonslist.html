@@ -1,0 +1,26 @@
+{% extends 'main/base.html'%}
+{% load static %}
+
+{% block title %}
+{{ course }}
+{% endblock %}
+
+
+{% block content %}
+<div class = "container">
+<h4>Доступные уроки дисциплины: {{ course }}</h4>
+<a href="create/">Добавить урок</a>
+<table>
+    <thead><th>Номер урока</th><th>Название</th></thead>
+    {% for lesson in lessons %}
+    <tr>
+        <td>{{ lesson.number }}</td>
+        <td>{{ lesson.title }}</td>
+        <td>
+            <a href="edit/{{ lesson.id }}">Изменить</a> | <a href="delete/{{ lesson.id }}">Удалить</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}

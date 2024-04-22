@@ -1,0 +1,47 @@
+{% extends 'main/base.html'%}
+{% load static %}
+
+{% block title %}
+Создание записи
+{% endblock %}
+
+
+{% block content %}
+<form method = "post" class = "container" enctype="multipart/form-data">
+    {% comment %} <h4>Создание записи для
+    {% csrf_token %}
+    {{ form.course }}<br>
+    <p>Номер занятия</p>
+    {{ form.number }}<br>
+    <p>Название занятия</p>
+    {{ form.title }}<br>
+    <p>Описание занятия</p>
+    {{ form.description }}<br>
+    <p>Файл презентации(если есть)</p>
+    {{ form.presentation_file }}<br>
+    <button type = "submit" class = "btn btn-success">Создать</button><br>
+    <span>{{error}}</span> {% endcomment %}
+
+    <h4>Создание записи для
+    {% csrf_token %}
+    <select class="form-select" name = "course" aria-label="Default select example" value = "{{ courseid }}" required >    
+        {% for course in courses %}
+            <option value = "{{ course.id }}" {% if course.id == courseid %}selected{% endif %}>{{ course.course }}</option>
+        {% endfor %}  
+    </select><br>
+    <p>Номер занятия</p>
+    <input class="form-control" value = "{{ lesson.number }}" name = "number" type="number" placeholder="Номер урока" aria-label="default input example" min = "1" max = "100" required ><br>
+    <p>Название занятия</p>
+    <input class="form-control" value = "{{ lesson.title }}" name = "title" type="text" placeholder="Название занятия" aria-label="default input example" required ><br>
+    <div class="mb-3">
+        <p>Описание занятия</p>
+        <textarea class="form-control" name = "description" id="exampleFormControlTextarea1" rows="3" required >{{ lesson.description }}</textarea>
+    </div><br>
+    <div class="mb-3">
+        <p>Презентация (если есть)</p>
+        <input class="form-control" value = "{{ lesson.presentation_file }}" name = "presentation_file" type="file" id="formFile">
+      </div>
+    <button type = "submit" class = "btn btn-success">Изменить</button><br>
+    <span>{{error}}</span>
+</form>
+{% endblock %}

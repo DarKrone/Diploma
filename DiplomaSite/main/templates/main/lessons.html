@@ -1,0 +1,48 @@
+{% extends "main/base.html" %}
+{% load static %} 
+
+
+{% block title %}
+  Занятия
+{% endblock title %}
+  
+
+
+{% block sidebar %}
+<div class="d-flex flex-column align-items-stretch flex-shrink-1 bg-body-tertiary" style="width: 250px;">
+  <a href="/" class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
+    <img class="bi pe-none me-2" src = "https://inginirium.ru/img/pin_internal.png"></img>
+    <span class="fs-5 fw-semibold">Занятия</span>
+  </a>
+  {% if lessons.count == 0 %} 
+  <div class="list-group list-group-flush border-bottom scrollarea">
+    <div href="#" class="list-group-item list-group-item-action active py-3 lh-sm" aria-current="true">
+      <div class="d-flex w-100 align-items-center justify-content-between">
+        <strong class="mb-1">Список занятий пока пуст</strong>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  {% for lesson in lessons %}
+    <div class="list-group list-group-flush border-bottom scrollarea">
+      <a href="{{ lesson.id }}" class="list-group-item list-group-item-action active py-3 lh-sm" aria-current="true">
+        <div class="d-flex w-100 align-items-center justify-content-between">
+          <strong class="mb-1">{{ lesson.title }}</strong>
+          <small>{{ lesson.number }}</small>
+        </div>
+        <div class="col-10 mb-1 small">{{ lesson.description }}</div>
+      </a>
+    </div>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}
+
+
+
+{% block content %}
+<div class = "container">
+  <p>{{ lesson.description }}</p>
+</div>
+{% endblock content %}
+  
