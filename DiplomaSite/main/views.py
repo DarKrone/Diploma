@@ -1,14 +1,21 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from .models import Lesson, Courses
 from .forms import LessonForm
 from django.http import HttpResponseRedirect, HttpResponseNotFound, FileResponse
+from django.views import View
+from django.views.generic import ListView, TemplateView, CreateView, UpdateView, DeleteView
 
 # Create your views here.
-def index(request):
-    return render(request, 'main/index.html')
+# def index(request):
+#     return render(request, 'main/index.html')
 
-def showlessons(request):
-    return render(request, 'main/showlessons.html')
+
+class Index(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "main/index.html")
 
 
 def create(request, courseid):
@@ -29,6 +36,24 @@ def create(request, courseid):
         'error': error
     }
     return render(request, 'main/create.html', context)
+
+
+class CreateLessonView(CreateView):
+    form_class = LessonForm
+    template_name = "main/create.html"
+    success_url = reverse_lazy("alllessonsofcourse")
+
+
+class UpdateLessonView(UpdateView):
+    model = Lesson
+    fields = ["course","number", "title", "description","presentation_file"]
+
+
+class DeleteLessonView(DeleteView):
+    model = Lesson
+    success_url = "main/allcourses.html"
+
+# Добавить класс Update и Delete 
 
 
 def edit(request, courseid, lessonid):
@@ -66,41 +91,30 @@ def delete(request, courseid, lessonid):
         return HttpResponseNotFound("<h2>Product not found</h2>")
 
 
-def lessons(request, courseid, lessonid):
-    if lessonid == 0:
-        lessons = Lesson.objects.filter(course = courseid)
-        context = {
-            'lessons': lessons
-        }
-        return render(request, 'main/lessons.html', context)
-    
-    lessons = Lesson.objects.filter(course = courseid)
-    lesson = Lesson.objects.get(id = lessonid)
-    context = {
-        'lessonid': lessonid,
-        'lesson': lesson,
-        'lessons': lessons
-    }
-    return render(request, 'main/lessons.html', context)
+class Lessons(ListView):
+    model = Lesson
+    context_object_name = "lessons"
+    template_name = "main/lessons.html"
+    def get_queryset(self):
+        return Lesson.objects.filter(course__slug=self.kwargs.get("slug")).select_related('course')
 
 
-def lessonslist(request, courseid):
-    lessons = Lesson.objects.filter(course = courseid)
-    course = Courses.objects.get(id = courseid)
-    context = {
-        'lessons': lessons,
-        'course': course
-    }
-    return render(request, 'main/lessonslist.html', context)
+class AllLessonsOfCourse(ListView):
+    model = Lesson
+    context_object_name = "lessons"
+    template_name = "main/alllessonsofcourse.html"
+
+    def get_queryset(self):
+        return Lesson.objects.filter(course__slug=self.kwargs.get("slug")).select_related('course')
 
 
-def courses(request):
-    courses = Courses.objects.all()
-    context = {'courses': courses}
-    return render(request, 'main/courses.html', context)
+class Course(ListView):
+    model = Courses
+    context_object_name = "courses"
+    template_name = "main/courses.html"
 
 
-def courseslist(request):
-    courses = Courses.objects.all()
-    context = {'courses': courses}
-    return render(request, 'main/courseslist.html', context)
+class AllCourses(ListView):
+    model = Courses
+    context_object_name = "courses"
+    template_name = "main/allcourses.html"

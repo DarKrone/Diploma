@@ -8,21 +8,21 @@
 
 {% block content %}
 <form method = "post" class = "container" enctype="multipart/form-data">
-    {% comment %} <h4>Создание записи для
+    <h4 class="fs-2 text-body-emphasis">Создание записи для</h4>
     {% csrf_token %}
     {{ form.course }}<br>
-    <p>Номер занятия</p>
+    <p class="fs-2 text-body-emphasis">Номер занятия</p>
     {{ form.number }}<br>
-    <p>Название занятия</p>
+    <p class="fs-2 text-body-emphasis">Название занятия</p>
     {{ form.title }}<br>
-    <p>Описание занятия</p>
+    <p class="fs-2 text-body-emphasis">Описание занятия</p>
     {{ form.description }}<br>
-    <p>Файл презентации(если есть)</p>
+    <p class="fs-2 text-body-emphasis">Файл презентации(если есть)</p>
     {{ form.presentation_file }}<br>
     <button type = "submit" class = "btn btn-success">Создать</button><br>
-    <span>{{error}}</span> {% endcomment %}
+    <span>{{error}}</span>
 
-    <h4>Создание записи для
+    {% comment %} <h4>Создание записи для
     {% csrf_token %}
     <select class="form-select" name = "course" aria-label="Default select example" value = "{{ courseid }}" required >    
         {% for course in courses %}
@@ -42,6 +42,6 @@
         <input class="form-control" name = "presentation_file" type="file" id="formFile">
       </div>
     <button type = "submit" class = "btn btn-success">Создать</button><br>
-    <span>{{error}}</span>
+    <span>{{error}}</span> {% endcomment %}
 </form>
 {% endblock %}

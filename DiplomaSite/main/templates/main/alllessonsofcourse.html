@@ -1,0 +1,33 @@
+{% extends 'main/base.html'%}
+{% load static %}
+
+{% block title %}
+Занятия
+{% endblock %}
+
+
+{% block content %}
+{% if lessons.count == 0 %}
+<div class = "container">
+    <h4>Доступных занятий нет</h4>
+    <a href="/allcourses/create/">Добавить урок</a>
+</div>
+{% else %}
+<div class = "container">
+    <h4>Доступные уроки дисциплины: {{ lessons.first.course.course }}</h4>
+    <a href="/allcourses/create/">Добавить урок</a>
+    <table>
+        <thead><th>Номер урока</th><th>Название</th></thead>
+        {% for lesson in lessons %}
+        <tr>
+            <td>{{ lesson.number }}</td>
+            <td>{{ lesson.title }}</td>
+            <td>
+                <a href="edit/{{ lesson.id }}">Изменить</a> | <a href="delete/{{ lesson.id }}">Удалить</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.db import models
 from django.core.validators import MinValueValidator
 
@@ -19,7 +20,7 @@ class Lesson(models.Model):
     title = models.CharField('Название урока', max_length=255)
     description = models.TextField('Описание')
     presentation_file = models.FileField(default=None,upload_to= 'pptxfiles/')
-
+    
 
     def __str__(self):
         return self.title

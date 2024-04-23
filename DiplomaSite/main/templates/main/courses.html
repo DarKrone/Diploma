@@ -3,7 +3,7 @@
 
 
 {% block title %}
-  Главная
+  Курсы
 {% endblock title %}
   
 
@@ -18,7 +18,7 @@
         </div>
         <h3 class="fs-2 text-body-emphasis">{{ course.course }}</h3>
         <p>{{ course.description }}</p>
-        <a href="lessons/{{ course.id }}/0" class="icon-link">
+        <a href="{{ course.slug }}/" class="icon-link">
           Перейти
           <svg class="bi"><use xlink:href="#chevron-right"/></svg>
         </a>
