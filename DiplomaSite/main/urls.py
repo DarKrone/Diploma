@@ -5,11 +5,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.index, name = 'home'),
-    path('courseslist/<int:courseid>/edit/<int:lessonid>/', views.edit, name = 'edit'),
-    path('courseslist/<int:courseid>/delete/<int:lessonid>/', views.delete, name = 'delete'),
-    path('courseslist/<int:courseid>/create/', views.create, name = 'create'),
-    path('courseslist/<int:courseid>/', views.lessonslist, name = 'lessonslist'),
-    path('courseslist/', views.courseslist, name = 'courseslist'),
-    path('courses/lessons/<int:courseid>/<int:lessonid>', views.lessons, name = 'lessons'),
+    path('courses_list/<int:course_id>/edit/<int:lesson_id>/', views.edit, name = 'edit'),
+    path('courses_list/<int:course_id>/delete/<int:lesson_id>/', views.delete, name = 'delete'),
+    path('courses_list/<int:course_id>/create/', views.create, name = 'create'),
+    path('courses_list/<int:course_id>/', views.lessons_list, name = 'lessons_list'),
+    path('courses_list/', views.courses_list, name = 'courses_list'),
+    path('courses/lessons/<int:course_id>/<int:lesson_id>', views.lessons, name = 'lessons'),
     path('courses/', views.courses, name = 'courses')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
