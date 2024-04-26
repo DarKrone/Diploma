@@ -20,6 +20,7 @@ def create(request, course_id):
         lesson.title = request.POST.get('title')
         lesson.description = request.POST.get('description')
         lesson.presentation_file = request.FILES.get('presentation_file')
+        lesson.full_clean()
         lesson.save()
         return redirect("/courses_list/{}".format(request.POST.get('course')))
     courses = Courses.objects.all()
@@ -41,6 +42,7 @@ def edit(request, course_id, lesson_id):
             lesson.title = request.POST.get('title')
             lesson.description = request.POST.get('description')
             lesson.presentation_file = request.FILES.get('presentation_file')
+            lesson.full_clean()
             lesson.save()
             return redirect("/courses_list/{}".format(request.POST.get('course')))
         courses = Courses.objects.all()
@@ -50,7 +52,6 @@ def edit(request, course_id, lesson_id):
             'lesson': lesson,
             'error': error,
         }
-        print(lesson.presentation_file)
         return render(request, 'main/edit.html', context)
 
     except Lesson.DoesNotExist:

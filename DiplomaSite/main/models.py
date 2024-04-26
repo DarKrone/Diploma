@@ -1,5 +1,6 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, FileExtensionValidator
+
 
 class Courses(models.Model):
     course = models.CharField('Название курса', max_length=255)
@@ -18,7 +19,7 @@ class Lesson(models.Model):
     number = models.IntegerField('Номер урока',validators=[MinValueValidator(0)])
     title = models.CharField('Название урока', max_length=255)
     description = models.TextField('Описание')
-    presentation_file = models.FileField(default=None,upload_to= 'pptxfiles/')
+    presentation_file = models.FileField(default = None, blank = True, upload_to= 'pptxfiles/', validators=[FileExtensionValidator(['pdf', 'doc', 'docx', 'jpg', 'png', 'xlsx', 'xls'], "Unsupported file format")])
 
 
     def __str__(self):
