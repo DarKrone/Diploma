@@ -26,17 +26,15 @@
     {% csrf_token %}
     <select class="form-select" name = "course" aria-label="Default select example" value = "{{ courseid }}" required >    
         {% for course in courses %}
-            <option value = "{{ course.id }}" {% if course.id == courseid %}selected{% endif %}>{{ course.course }}</option>
+            <option value = "{{ course.id }}" {% if course.id == course_id %}selected{% endif %}>{{ course.course }}</option>
         {% endfor %}  
     </select><br>
     <p>Номер занятия</p>
     <input class="form-control" value = "{{ lesson.number }}" name = "number" type="number" placeholder="Номер урока" aria-label="default input example" min = "1" max = "100" required ><br>
     <p>Название занятия</p>
     <input class="form-control" value = "{{ lesson.title }}" name = "title" type="text" placeholder="Название занятия" aria-label="default input example" required ><br>
-    <div class="mb-3">
-        <p>Описание занятия</p>
-        <textarea class="form-control" name = "description" id="exampleFormControlTextarea1" rows="3" required >{{ lesson.description }}</textarea>
-    </div><br>
+    <p>Описание занятия</p>
+    <textarea class="form-control" name = "description" id="exampleFormControlTextarea1" rows="3" required >{{ lesson.description }}</textarea><br>
     <div class="mb-3">
         <p>Презентация (если есть)</p>
         <input class="form-control" value = "{{ lesson.presentation_file }}" name = "presentation_file" type="file" id="formFile">

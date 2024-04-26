@@ -48,8 +48,9 @@ def edit(request, course_id, lesson_id):
             'course_id': course_id,
             'courses': courses,
             'lesson': lesson,
-            'error': error
+            'error': error,
         }
+        print(lesson.presentation_file)
         return render(request, 'main/edit.html', context)
 
     except Lesson.DoesNotExist:
