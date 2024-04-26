@@ -9,28 +9,19 @@
 {% block content %}
 <form method = "post" class = "container" enctype="multipart/form-data">
     <h4>Создание записи для</h4>
-    {% csrf_token %}
-    <select class="form-select" name = "course" aria-label="Default select example" value = "{{ courseid }}" required >    
-        {% for course in courses %}
-            <option value = "{{ course.id }}" {% if course.id == course_id %}selected{% endif %}>{{ course.course }}</option>
-        {% endfor %}  
-    </select></br>
-    <p>Номер занятия:</p>
-    <input class="form-control" value = "{{ lesson.number }}" name = "number" type="number" placeholder="Номер урока" aria-label="default input example" min = "1" max = "100" required ></br>
-    <p>Название занятия:</p>
-    <input class="form-control" value = "{{ lesson.title }}" name = "title" type="text" placeholder="Название занятия" aria-label="default input example" required ></br>
-    <p>Описание занятия:</p>
-    <textarea class="form-control" name = "description" id="exampleFormControlTextarea1" rows="3" required >{{ lesson.description }}</textarea></br>
-    {% if lesson.presentation_file %}
-    <div class="mb-3">
-        <p>Текущий файл:</p> <a href = " {{ lesson.presentation_file.url }} ">{{ lesson.presentation_file }}</a>
-    </div>
-    {% endif %}
-    <div class="mb-3">
-        <p>Заменить текущий файл на:</p>
-        <input class="form-control" value = "{{ lesson.presentation_file }}" name = "presentation_file" type="file" id="formFile" accept = ".pdf, .doc, .docx, .jpg, .png, .xlsx, .xls">
-    </div>
-    <button type = "submit" class = "btn btn-success">Изменить</button></br>
-    <span>{{error}}</span>
-</form>
+        {% csrf_token %}
+        {{ form.course }}<br>
+        <p>Номер занятия:</p>
+        {{ form.number }}<br>
+        <p>Название занятия:</p>
+        {{ form.title }}<br>
+        <p>Краткое описание занятия:</p>
+        {{ form.description }}<br>
+        <p>Описание занятия:</p>
+        {{ form.lesson }}<br>
+        <p>Файл презентации (если есть):</p>
+        {{ form.presentation_file }}<br>
+        <button type = "submit" class = "btn btn-success">Создать</button><br>
+        <span>{{error}}</span> 
+    </form> 
 {% endblock %}

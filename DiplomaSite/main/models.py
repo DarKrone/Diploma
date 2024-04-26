@@ -1,5 +1,6 @@
 from django.db import models
-from django.core.validators import MinValueValidator, FileExtensionValidator
+from django.core.validators import MinValueValidator, FileExtensionValidator, MaxValueValidator
+from django_quill.fields import QuillField
 
 
 class Courses(models.Model):
@@ -16,11 +17,12 @@ class Courses(models.Model):
 
 class Lesson(models.Model):
     course = models.ForeignKey(Courses, default = 1, on_delete=models.CASCADE)
-    number = models.IntegerField('Номер урока',validators=[MinValueValidator(0)])
+    number = models.IntegerField('Номер урока',default = 1, validators=[MinValueValidator(0)])
     title = models.CharField('Название урока', max_length=255)
-    description = models.TextField('Описание')
-    presentation_file = models.FileField(default = None, blank = True, upload_to= 'pptxfiles/', validators=[FileExtensionValidator(['pdf', 'doc', 'docx', 'jpg', 'png', 'xlsx', 'xls'], "Unsupported file format")])
-
+    description = models.TextField('Короткое описание')
+    lesson = QuillField('Занятие', default=None, blank = True)
+    
+    presentation_file = models.FileField("Файл занятия", default = None, blank = True, upload_to= 'pptxfiles/', validators=[FileExtensionValidator(['pdf', 'doc', 'docx', 'jpg', 'png', 'xlsx', 'xls'], "Unsupported file format")])
 
     def __str__(self):
         return self.title

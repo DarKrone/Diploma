@@ -13,20 +13,16 @@ def show_lessons(request):
 
 def create(request, course_id):
     error = ''
+    lesson_form = LessonForm(initial={'course': course_id})
     if request.method == 'POST':
-        lesson = Lesson()
-        lesson.course_id = request.POST.get('course')
-        lesson.number = request.POST.get('number')
-        lesson.title = request.POST.get('title')
-        lesson.description = request.POST.get('description')
-        lesson.presentation_file = request.FILES.get('presentation_file')
-        lesson.full_clean()
-        lesson.save()
-        return redirect("/courses_list/{}".format(request.POST.get('course')))
-    courses = Courses.objects.all()
+        lesson_form = LessonForm(request.POST, request.FILES)
+        if lesson_form.is_valid():
+            lesson_form.save()
+            return redirect("/courses_list/{}".format(request.POST.get('course')))
+        else:
+            error = "Форма была некорректна"
     context = {
-        'course_id': course_id,
-        'courses': courses,
+        'form': lesson_form,
         'error': error
     }
     return render(request, 'main/create.html', context)
@@ -36,27 +32,22 @@ def edit(request, course_id, lesson_id):
     error = ''
     try:
         lesson = Lesson.objects.get(id = lesson_id)
+        lesson_form = LessonForm(instance = lesson)
         if request.method == "POST":
-            lesson.course_id = request.POST.get('course')
-            lesson.number = request.POST.get('number')
-            lesson.title = request.POST.get('title')
-            lesson.description = request.POST.get('description')
-            lesson.presentation_file = request.FILES.get('presentation_file')
-            lesson.full_clean()
-            lesson.save()
-            return redirect("/courses_list/{}".format(request.POST.get('course')))
-        courses = Courses.objects.all()
+            lesson_form = LessonForm(request.POST, request.FILES, instance=lesson)
+            if lesson_form.is_valid():
+                lesson_form.save()
+                return redirect("/courses_list/{}".format(request.POST.get('course')))
+            else:
+                error = "Форма была некорректна"
         context = {
-            'course_id': course_id,
-            'courses': courses,
-            'lesson': lesson,
+            'form': lesson_form,
             'error': error,
         }
         return render(request, 'main/edit.html', context)
 
     except Lesson.DoesNotExist:
         return HttpResponseNotFound("<h2>Product not found</h2>")
-
 
 
 def delete(request, course_id, lesson_id):
