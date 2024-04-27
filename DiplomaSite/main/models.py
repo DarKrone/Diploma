@@ -22,7 +22,7 @@ class Lesson(models.Model):
     description = models.TextField('Короткое описание')
     lesson = QuillField('Занятие', default=None, blank = True)
     
-    presentation_file = models.FileField("Файл занятия", default = None, blank = True, upload_to= 'pptxfiles/', validators=[FileExtensionValidator(['pdf', 'doc', 'docx', 'jpg', 'png', 'xlsx', 'xls'], "Unsupported file format")])
+    presentation_file = models.FileField("Файл занятия", default = None, blank = True, upload_to= 'pptxfiles/', validators=[FileExtensionValidator(['pdf', 'doc', 'docx', 'xlsx', 'xls'], "Unsupported file format")])
 
     def __str__(self):
         return self.title

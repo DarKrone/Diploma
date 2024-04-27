@@ -24,6 +24,6 @@ class LessonForm(ModelForm):
             }),
             "presentation_file": ClearableFileInput(attrs={
                 'class': 'form-control',
-                'accept': '.pdf, .doc, .docx, .jpg, .png, .xlsx, .xls',
+                'accept': '.pdf, .doc, .docx, .xlsx, .xls',
             })
         }

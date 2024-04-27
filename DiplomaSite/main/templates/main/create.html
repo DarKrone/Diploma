@@ -8,7 +8,8 @@
 
 {% block content %}
 <form method = "post" class = "container" enctype="multipart/form-data">
-<h4>Создание записи для</h4>
+    <h4 class = "text-danger">{{error}}</h4> 
+    <h4>Создание записи для</h4>
     {% csrf_token %}
     {{ form.course }}<br>
     <p>Номер занятия:</p>
@@ -20,8 +21,8 @@
     <p>Описание занятия:</p>
     {{ form.lesson }}<br>
     <p>Файл презентации (если есть):</p>
+    {{ form.presentation_file.errors }}
     {{ form.presentation_file }}<br>
     <button type = "submit" class = "btn btn-success">Создать</button><br>
-    <span>{{error}}</span> 
 </form> 
 {% endblock %}
