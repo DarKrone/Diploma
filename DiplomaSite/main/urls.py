@@ -14,4 +14,5 @@ urlpatterns = [
     path('courses/', views.courses, name = 'courses'),
     path('login/', views.user_login, name = "login"),
     path('logout/', views.user_logout, name = "logout"),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('media/pptxfiles/<str:filename>', views.secure_file_read, name = "download"),
+]
