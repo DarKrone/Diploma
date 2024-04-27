@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
 from .models import Lesson, Courses
 from .forms import LessonForm
 from django.http import HttpResponseRedirect, HttpResponseNotFound, FileResponse
@@ -61,13 +62,13 @@ def delete(request, course_id, lesson_id):
 
 def lessons(request, course_id, lesson_id):
     if lesson_id == 0:
-        lessons = Lesson.objects.filter(course = course_id)
+        lessons = Lesson.objects.filter(course = course_id).order_by('number').values()
         context = {
             'lessons': lessons
         }
         return render(request, 'main/lessons.html', context)
     
-    lessons = Lesson.objects.filter(course = course_id)
+    lessons = Lesson.objects.filter(course = course_id).order_by('number').values()
     lesson = Lesson.objects.get(id = lesson_id)
     context = {
         'lesson_id': lesson_id,
@@ -97,3 +98,19 @@ def courses_list(request):
     courses = Courses.objects.all()
     context = {'courses': courses}
     return render(request, 'main/courses_list.html', context)
+
+
+def user_login(request):
+    if request.POST:
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username = username, password = password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+    return render(request, 'main/login.html')
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('login')
