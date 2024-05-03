@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
 from .models import Lesson, Courses, AvailableLessons
 from .forms import LessonForm
-from django.http import HttpResponseRedirect, HttpResponseNotFound, FileResponse
+from django.http import HttpResponseRedirect, HttpResponseNotFound, FileResponse, Http404
 import random
 import string
 
@@ -71,6 +71,7 @@ def create_link(request, course_id, lesson_id):
     AvailableLessons.objects.create(
         lesson = Lesson.objects.get(id = lesson_id),
         slug = sluggen,
+        link = "http://127.0.0.1:8000/availablelesson/" + sluggen,
         password = passwordgen,
         is_active = False,
     )

@@ -8,12 +8,20 @@
 
 
 {% block content %}
+<script>
+    function copytext() {
+        var copyText = document.getElementById("link");
+        copyText.select();
+        copyText.setSelectionRange(0, 100)
+        document.execCommand("copy");
+    }
+</script>
 <div class = "container d-flex flex-row mb-2">
     <div class = "container text-break">
         <div class = "ps-5 w-100">
         <h4>Ссылка на урок:</h4>
-        <p> {{ slug }} </p>
-
+        <input class = "form-control mb-3" type="text" value="http://127.0.0.1:8000/availablelesson/{{ slug }}" id="link">
+        <button class = "btn btn-success" onclick="copytext()">Скопировать текст</button>
         <h4>Пароль к уроку:</h4>
         <p> {{ password }} </p>    
         

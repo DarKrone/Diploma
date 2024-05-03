@@ -36,8 +36,9 @@ class Lesson(models.Model):
 class AvailableLessons(models.Model):
     lesson = models.ForeignKey(Lesson, default=None, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=100)
+    link = models.URLField('Ссылка', default = "http://127.0.0.1:8000/availablelesson/", max_length=250)
     password = models.CharField('Пароль к уроку', max_length=100)
-    is_active = models.BooleanField('Доступно', default=False)
+    is_active = models.BooleanField('Доступность без пароля', default=False)
 
     def __str__(self):
         return self.lesson.title

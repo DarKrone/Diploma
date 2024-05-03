@@ -15,5 +15,9 @@ class LessonAdmin(admin.ModelAdmin):
     list_display = ["course", "number", "title"]
     ordering = ['course', 'number']
 
+@admin.register(AvailableLessons)
+class LessonAdmin(admin.ModelAdmin):
+    list_display = ["id", "lesson"]
+    orderind = ['id']
+
 admin.site.register(Courses)
-admin.site.register(AvailableLessons)
