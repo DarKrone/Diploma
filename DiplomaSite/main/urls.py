@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.index, name = 'home'),
     path('courses_list/<int:course_id>/edit/<int:lesson_id>/', views.edit, name = 'edit'),
     path('courses_list/<int:course_id>/delete/<int:lesson_id>/', views.delete, name = 'delete'),
+    path('courses_list/<int:course_id>/createlink/<int:lesson_id>/', views.create_link, name = 'createlink'),
     path('courses_list/<int:course_id>/create/', views.create, name = 'create'),
     path('courses_list/<int:course_id>/', views.lessons_list, name = 'lessons_list'),
     path('courses_list/', views.courses_list, name = 'courses_list'),
@@ -15,4 +16,5 @@ urlpatterns = [
     path('login/', views.user_login, name = "login"),
     path('logout/', views.user_logout, name = "logout"),
     path('media/pptxfiles/<str:filename>', views.secure_file_read, name = "download"),
+    path('availablelesson/<slug:lesson_slug>', views.available_lesson, name = "available_lesson"),
 ]

@@ -1,0 +1,23 @@
+{% extends "main/base.html" %}
+{% load static %} 
+
+
+{% block title %}
+Готовый урок
+{% endblock title %}
+
+
+{% block content %}
+<div class = "container d-flex flex-row mb-2">
+    <div class = "container text-break">
+        <div class = "ps-5 w-100">
+        <h4>Ссылка на урок:</h4>
+        <p> {{ slug }} </p>
+
+        <h4>Пароль к уроку:</h4>
+        <p> {{ password }} </p>    
+        
+        </div>
+    </div>
+</div>
+{% endblock content %}

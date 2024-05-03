@@ -15,6 +15,7 @@ class Courses(models.Model):
         verbose_name = 'Курс'
         verbose_name_plural = 'Курсы'
 
+
 class Lesson(models.Model):
     course = models.ForeignKey(Courses, default = 1, on_delete=models.CASCADE)
     number = models.IntegerField('Номер урока',default = 1, validators=[MinValueValidator(0)])
@@ -30,3 +31,17 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'Урок'
         verbose_name_plural = 'Уроки'
+
+
+class AvailableLessons(models.Model):
+    lesson = models.ForeignKey(Lesson, default=None, on_delete=models.CASCADE)
+    slug = models.SlugField(max_length=100)
+    password = models.CharField('Пароль к уроку', max_length=100)
+    is_active = models.BooleanField('Доступно', default=False)
+
+    def __str__(self):
+        return self.lesson.title
+    
+    class Meta:
+        verbose_name = 'Доступный урок'
+        verbose_name_plural = 'Доступные уроки'

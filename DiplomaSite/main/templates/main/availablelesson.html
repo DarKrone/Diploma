@@ -1,0 +1,31 @@
+{% extends "main/base.html" %}
+{% load static %} 
+
+
+{% block title %}
+Открытое занятие
+{% endblock title %}
+
+
+{% block content %}
+<div class = "container d-flex flex-row mb-2">
+    {% if lesson.is_active %}
+    <div class = "container text-break">
+        <div class = "ps-5 w-100">
+        <h4>{{ lesson.lesson.title }}</h4>
+        {{ lesson.lesson.lesson.html|safe }}
+        {% if lesson.lesson.presentation_file %}<a href = "{{ lesson.presentation_file.url }}">Скачать презентацию</a>{% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class = "container">
+        <form class = "container"  method = "POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="password" class="form-label">Пароль к уроку</label>
+                <input name = "password" type="password" class="form-control" id="password">
+            </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}
