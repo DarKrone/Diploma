@@ -7,23 +7,23 @@ class LessonForm(ModelForm):
         fields = ["course","number", "title", "description", "lesson","presentation_file"]
         widgets = {
             "course": Select(attrs={
-                'class': 'form-control'
+                'class': 'form-control shadow-sm'
             }),
             "number": NumberInput(attrs={
-                'class': 'form-control',
+                'class': 'form-control shadow-sm',
                 'placeholder': 'Введите номер занятия',
                 'min': 1,
             }),
             "title": TextInput(attrs={
-                'class': 'form-control',
+                'class': 'form-control shadow-sm',
                 'placeholder': 'Введите название'
             }),
             "description": Textarea(attrs={
-                'class': 'form-control',
+                'class': 'form-control shadow-sm',
                 'placeholder': 'Введите описание'
             }),
             "presentation_file": ClearableFileInput(attrs={
-                'class': 'form-control',
+                'class': 'form-control shadow-sm',
                 'accept': '.pdf, .doc, .docx, .xlsx, .xls',
             })
         }

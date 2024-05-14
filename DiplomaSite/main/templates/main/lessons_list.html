@@ -9,18 +9,35 @@
 {% block content %}
 <div class = "container">
 <h4>Доступные уроки дисциплины: {{ course }}</h4>
-<a href="create/">Добавить урок</a>
-<table>
-    <thead><th>Номер урока</th><th>Название</th></thead>
+<a href="create/" class = "h3 mx-auto text-primary">Добавить урок</a>
+{% if lessons.count > 0 %}
+<table class="table mt-3">
+    <thead class = "table-warning"><th>Номер урока</th><th>Название</th> <th>Редактирование</th></thead>
     {% for lesson in lessons %}
     <tr>
         <td>{{ lesson.number }}</td>
         <td>{{ lesson.title }}</td>
         <td>
-            <a href="createlink/{{ lesson.id }}">Создать ссылку</a> | <a href="edit/{{ lesson.id }}">Изменить</a> | <a href="delete/{{ lesson.id }}">Удалить</a>
+            <a class = "" href="createlink/{{ lesson.id }}">Создать ссылку</a> | <a href="edit/{{ lesson.id }}">Изменить</a> | <a href="deletelesson/{{ lesson.id }}">Удалить</a>
         </td>
     </tr>
     {% endfor %}
+</table>
+{% endif %}
+{% if available_lessons.count > 0 %}
+<table class="table mt-3">
+    <thead class = "table-warning"><th>Номер доступного урока</th><th>Ссылка на урок</th><th>Пароль к уроку</th><th>Редактирование</th></thead>
+    {% for lesson in available_lessons %}
+    <tr>
+        <td>{{ lesson.lesson.number }}</td>
+        <td>http://127.0.0.1:8000/availablelesson/{{ lesson.slug }}</td>
+        <td>{{ lesson.password }}</td>
+        <td>
+            <a href="deletelink/{{ lesson.id }}">Удалить</a>
+        </td>
+    </tr>
+    {% endfor %}
+{% endif %}        
 </table>
 </div>
 {% endblock %}

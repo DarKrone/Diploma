@@ -14,25 +14,27 @@ def index(request):
 
 # Редактирование
 @login_required
-def create(request, course_id):
+def create(request, course_slug):
     error = ''
+    course_id = Courses.objects.get(slug = course_slug).id
     lesson_form = LessonForm(initial={'course': course_id})
     if request.method == 'POST':
         lesson_form = LessonForm(request.POST, request.FILES)
         if lesson_form.is_valid():
             lesson_form.save()
-            return redirect("/courses_list/{}".format(request.POST.get('course')))
+            return redirect("/courses_list/{}".format(course_slug))
         else:
             error = "Форма была некорректна"
     context = {
         'form': lesson_form,
-        'error': error
+        'error': error,
+        'type': 'create',
     }
     return render(request, 'main/create.html', context)
 
 
 @login_required
-def edit(request, course_id, lesson_id):
+def edit(request, course_slug, lesson_id):
     error = ''
     try:
         lesson = Lesson.objects.get(id = lesson_id)
@@ -41,31 +43,41 @@ def edit(request, course_id, lesson_id):
             lesson_form = LessonForm(request.POST, request.FILES, instance=lesson)
             if lesson_form.is_valid():
                 lesson_form.save()
-                return redirect("/courses_list/{}".format(request.POST.get('course')))
+                return redirect("/courses_list/{}".format(course_slug))
             else:
                 error = "Форма была некорректна"
         context = {
             'form': lesson_form,
             'error': error,
+            'type': 'edit',
         }
-        return render(request, 'main/edit.html', context)
+        return render(request, 'main/create.html', context)
 
     except Lesson.DoesNotExist:
         return HttpResponseNotFound("<h2>Product not found</h2>")
 
 
 @login_required
-def delete(request, course_id, lesson_id):
+def deleteLesson(request, course_slug, lesson_id):
     try:
         lesson = Lesson.objects.get(id = lesson_id)
         lesson.delete()
-        return redirect("/courses_list/{}".format(course_id))
+        return redirect("/courses_list/{}".format(course_slug))
     except Lesson.DoesNotExist:
         return HttpResponseNotFound("<h2>Product not found</h2>")
     
 
 @login_required
-def create_link(request, course_id, lesson_id):
+def deleteLink(request, course_slug, link_id):
+    try:
+        lesson = AvailableLessons.objects.get(id = link_id)
+        lesson.delete()
+        return redirect("/courses_list/{}".format(course_slug))
+    except Lesson.DoesNotExist:
+        return HttpResponseNotFound("<h2>Product not found</h2>")
+
+@login_required
+def create_link(request, course_slug, lesson_id):
     sluggen = ''.join([random.choice(string.ascii_letters + string.digits ) for n in range(12)])
     passwordgen = ''.join([random.choice(string.ascii_letters + string.digits ) for n in range(12)])
     AvailableLessons.objects.create(
@@ -89,26 +101,28 @@ def courses_list(request):
     return render(request, 'main/courses_list.html', context)
 
 @login_required
-def lessons_list(request, course_id):
-    lessons = Lesson.objects.filter(course = course_id)
-    course = Courses.objects.get(id = course_id)
+def lessons_list(request, course_slug):
+    lessons = Lesson.objects.filter(course__slug = course_slug)
+    course = Courses.objects.get(slug = course_slug)
+    available_lessons = AvailableLessons.objects.filter(lesson__course__slug = course_slug)
     context = {
         'lessons': lessons,
-        'course': course
+        'course': course,
+        'available_lessons': available_lessons,
     }
     return render(request, 'main/lessons_list.html', context)
 
 # Просмотр
 @login_required
-def lessons(request, course_id, lesson_id):
+def lessons(request, course_slug, lesson_id):
     if lesson_id == 0:
-        lessons = Lesson.objects.filter(course = course_id).order_by('number').values()
+        lessons = Lesson.objects.filter(course__slug = course_slug).order_by('number').values()
         context = {
             'lessons': lessons
         }
         return render(request, 'main/lessons.html', context)
     
-    lessons = Lesson.objects.filter(course = course_id).order_by('number').values()
+    lessons = Lesson.objects.filter(course__slug = course_slug).order_by('number').values()
     lesson = Lesson.objects.get(id = lesson_id)
     context = {
         'lesson_id': lesson_id,
@@ -121,7 +135,8 @@ def lessons(request, course_id, lesson_id):
 def available_lesson(request, lesson_slug):
     lesson = AvailableLessons.objects.get(slug = lesson_slug)
     context = {
-        'lesson': lesson
+        'lesson': lesson,
+        'error': ''
     }
     if request.user.is_superuser:
         context['lesson'].is_active = True
@@ -130,6 +145,11 @@ def available_lesson(request, lesson_slug):
     if request.method == 'POST':
         if lesson.password == request.POST.get('password'):
             context['lesson'].is_active = True
+            return render(request, 'main/availablelesson.html', context)
+        else:
+            context = {
+                'error': "Неверный пароль"
+            }
             return render(request, 'main/availablelesson.html', context)
 
     return render(request, 'main/availablelesson.html', context)
