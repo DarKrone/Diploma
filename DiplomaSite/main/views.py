@@ -9,6 +9,7 @@ import random
 import string
 
 # Главная страница.
+@login_required
 def index(request):
     return render(request, 'main/index.html')
 
@@ -131,44 +132,51 @@ def lessons(request, course_slug, lesson_id):
     }
     return render(request, 'main/lessons.html', context)
 
-
-def available_lesson(request, lesson_slug):
-    print("страница")
+def get_lesson(lesson_slug):
     lesson = AvailableLessons.objects.get(slug = lesson_slug)
     comments = CommentsOnLesson.objects.filter(lesson__slug = lesson_slug).order_by("-date")
     context = {
         'lesson': lesson,
         'comments': comments,
-        'admin': False,
+    }
+    return context
+
+def available_lesson(request, lesson_slug):
+    password_for_lesson = AvailableLessons.objects.get(slug = lesson_slug).password
+    context = {
         'error': ''
     }
-
-    if request.user.is_superuser:
-        context['lesson'].is_active = True
-        context['admin'] = True
-
     if request.method == 'POST':
-        print("пост")
         if 'check_password' in request.POST:
-            if lesson.password == request.POST.get('password'):
-                context['lesson'].is_active = True
+            if password_for_lesson == request.POST.get('password'):
+                request.session[lesson_slug] = True
+                context = get_lesson(lesson_slug)
                 return render(request, 'main/availablelesson.html', context)
             else:
                 context = {
                     'error': "Неверный пароль"
                 }
-                return render(request, 'main/availablelesson.html', context)
+                return render(request, 'main/accesstolesson.html', context)
         elif 'create_comment' in request.POST:
-            print("здесь")
+            if request.session.get(lesson_slug) != True:
+                return render(request, 'main/accesstolesson.html', context)
             comment = CommentsOnLesson()
-            comment.lesson = lesson
+            comment.lesson = AvailableLessons.objects.get(slug = lesson_slug)
             comment.author = request.POST.get('comment_author')
             comment.comment = request.POST.get('comment_text')
             comment.save()
-            context['lesson'].is_active = True
-            return redirect("/availablelesson/{}".format(lesson_slug)) 
+            context = get_lesson(lesson_slug)
+            return render(request, 'main/availablelesson.html', context)
         
-    return render(request, 'main/availablelesson.html', context)
+    if request.user.is_superuser:
+        context = get_lesson(lesson_slug)
+        return render(request, 'main/availablelesson.html', context)
+
+    if request.session.get(lesson_slug) == True:
+        context = get_lesson(lesson_slug)
+        return render(request, 'main/availablelesson.html', context)
+    
+    return render(request, 'main/accesstolesson.html', context)
 
 @login_required
 def courses(request):

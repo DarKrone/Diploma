@@ -6,6 +6,10 @@
 {% endblock %}
 
 
+{% block head_includes %}
+    {% include 'django_quill/media.html' %}
+{% endblock head_includes %}
+
 {% block content %}
 <form method = "post" class = "container" enctype="multipart/form-data">
     <h4 class = "text-danger">{{error}}</h4> 

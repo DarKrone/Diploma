@@ -1,0 +1,23 @@
+{% extends "main/base.html" %}
+{% load static %} 
+
+
+{% block title %}
+Открытое занятие
+{% endblock title %}
+
+
+{% block content %}
+<div class = "container mb-2">
+    <div class = "container">
+        <form class = "container"  method = "POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="password" class="form-label">Пароль к уроку</label>
+                <p class="text-danger">{{error}}</p>
+                <input name = "password" type="password" class="form-control" id="password">
+            </div>
+            <button type = "submit" name = "check_password" class = "btn btn-success">Войти</button><br>
+    </div>
+</div>
+{% endblock %}

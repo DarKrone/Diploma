@@ -9,7 +9,6 @@
 
 {% block content %}
 <div class = "container mb-2">
-    {% if lesson.is_active %}
     <div class = "container text-break border-bottom">
         <div>
         <h4>{{ lesson.lesson.title }}</h4>
@@ -43,17 +42,5 @@
         {% endfor %}
             
     </div>
-    {% else %}
-    <div class = "container">
-        <form class = "container"  method = "POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="password" class="form-label">Пароль к уроку</label>
-                <p class="text-danger">{{error}}</p>
-                <input name = "password" type="password" class="form-control" id="password">
-            </div>
-            <button type = "submit" name = "check_password" class = "btn btn-success">Войти</button><br>
-    </div>
-    {% endif %}
 </div>
 {% endblock content %}
