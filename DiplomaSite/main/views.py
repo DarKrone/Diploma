@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
-from .models import Lesson, Courses, AvailableLessons
+from .models import Lesson, Courses, AvailableLessons, CommentsOnLesson
 from .forms import LessonForm
 from django.http import HttpResponseRedirect, HttpResponseNotFound, FileResponse, Http404
 import random
@@ -134,8 +134,10 @@ def lessons(request, course_slug, lesson_id):
 
 def available_lesson(request, lesson_slug):
     lesson = AvailableLessons.objects.get(slug = lesson_slug)
+    comments = CommentsOnLesson.objects.filter(lesson__slug = lesson_slug).order_by("-date")
     context = {
         'lesson': lesson,
+        'comments': comments,
         'error': ''
     }
     if request.user.is_superuser:

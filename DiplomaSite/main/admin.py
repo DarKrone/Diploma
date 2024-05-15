@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.db.models import Count
 from django.db.models.query import QuerySet
 from django.http import HttpRequest
-from .models import Lesson, Courses, AvailableLessons
+from .models import Lesson, Courses, AvailableLessons, CommentsOnLesson
 
 # class LessonsInline(admin.StackedInline):
 #     model = Lesson
@@ -16,8 +16,18 @@ class LessonAdmin(admin.ModelAdmin):
     ordering = ['course', 'number']
 
 @admin.register(AvailableLessons)
-class LessonAdmin(admin.ModelAdmin):
+class LinkAdmin(admin.ModelAdmin):
     list_display = ["id", "lesson"]
     orderind = ['id']
 
 admin.site.register(Courses)
+
+@admin.register(CommentsOnLesson)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ["id", "get_lesson", "author", "date", "short_comment"]
+    orderind = ['id']
+
+    @admin.display(ordering='lesson__title', description='Lesson')
+    def get_lesson(self, obj):
+        return obj.lesson.lesson.title
+    

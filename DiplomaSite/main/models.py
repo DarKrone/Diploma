@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, FileExtensionValidator, MaxValueValidator
 from django_quill.fields import QuillField
+from django.template.defaultfilters import truncatechars
 
 
 class Courses(models.Model):
@@ -46,3 +47,20 @@ class AvailableLessons(models.Model):
     class Meta:
         verbose_name = 'Доступный урок'
         verbose_name_plural = 'Доступные уроки'
+
+class CommentsOnLesson(models.Model):
+    lesson = models.ForeignKey(AvailableLessons, default=None, blank = False, on_delete=models.CASCADE)
+    author = models.CharField('Автор', max_length=50)
+    comment = models.TextField('Комментарий', max_length=500)
+    date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.comment
+    
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    @property
+    def short_comment(self):
+        return truncatechars(self.comment, 35)

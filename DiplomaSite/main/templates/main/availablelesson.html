@@ -8,14 +8,25 @@
 
 
 {% block content %}
-<div class = "container d-flex flex-row mb-2">
+<div class = "container mb-2">
     {% if lesson.is_active %}
-    <div class = "container text-break">
+    <div class = "container text-break border-bottom">
         <div>
         <h4>{{ lesson.lesson.title }}</h4>
         {{ lesson.lesson.lesson.html|safe }}
         {% if lesson.lesson.presentation_file %}<a href = "{{ lesson.lesson.presentation_file.url }}">Скачать презентацию</a>{% endif %}
         </div>
+    </div>
+    <div class = "container my-2 text-break">
+        
+        {% for comment in comments %}
+        <div class = "border-bottom border-3 py-3">
+            <h3>От: {{comment.author}}</h3>
+            <p>{{comment.date}} </p>
+            <p class = "bg-secondary text-light p-2 rounded-4 ms-5">{{comment.comment}}</p>
+        </div>
+        {% endfor %}
+            
     </div>
     {% else %}
     <div class = "container">
