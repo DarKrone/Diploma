@@ -133,27 +133,41 @@ def lessons(request, course_slug, lesson_id):
 
 
 def available_lesson(request, lesson_slug):
+    print("страница")
     lesson = AvailableLessons.objects.get(slug = lesson_slug)
     comments = CommentsOnLesson.objects.filter(lesson__slug = lesson_slug).order_by("-date")
     context = {
         'lesson': lesson,
         'comments': comments,
+        'admin': False,
         'error': ''
     }
+
     if request.user.is_superuser:
         context['lesson'].is_active = True
-        return render(request, 'main/availablelesson.html', context)
-    
-    if request.method == 'POST':
-        if lesson.password == request.POST.get('password'):
-            context['lesson'].is_active = True
-            return render(request, 'main/availablelesson.html', context)
-        else:
-            context = {
-                'error': "Неверный пароль"
-            }
-            return render(request, 'main/availablelesson.html', context)
+        context['admin'] = True
 
+    if request.method == 'POST':
+        print("пост")
+        if 'check_password' in request.POST:
+            if lesson.password == request.POST.get('password'):
+                context['lesson'].is_active = True
+                return render(request, 'main/availablelesson.html', context)
+            else:
+                context = {
+                    'error': "Неверный пароль"
+                }
+                return render(request, 'main/availablelesson.html', context)
+        elif 'create_comment' in request.POST:
+            print("здесь")
+            comment = CommentsOnLesson()
+            comment.lesson = lesson
+            comment.author = request.POST.get('comment_author')
+            comment.comment = request.POST.get('comment_text')
+            comment.save()
+            context['lesson'].is_active = True
+            return redirect("/availablelesson/{}".format(lesson_slug)) 
+        
     return render(request, 'main/availablelesson.html', context)
 
 @login_required

@@ -18,12 +18,27 @@
         </div>
     </div>
     <div class = "container my-2 text-break">
-        
+        <form method = "post" class = "container" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h4>Оставить комментарий к уроку</h4>
+            <div class="mb-3">
+                <label for="author" class="form-label">Автор</label>
+                <input type="text" name = "comment_author" class="form-control" maxlength="50" id="author" placeholder="Автор комментария" required>
+            </div>
+            <div class="mb-3">
+                <label for="com_text" class="form-label">Комментарий (макс. символов 500)</label>
+                <textarea class="form-control" name = "comment_text" id="com_text" rows="3" maxlength="500" required></textarea>
+            </div>
+            <div class="col-auto">
+                <button type="submit" name = "create_comment" class="btn btn-primary mb-3">Отправить комментарий</button>
+            </div>
+        </form> 
+        <h4 class = "mt-5">Комментарии</h4>
         {% for comment in comments %}
         <div class = "border-bottom border-3 py-3">
             <h3>От: {{comment.author}}</h3>
             <p>{{comment.date}} </p>
-            <p class = "bg-secondary text-light p-2 rounded-4 ms-5">{{comment.comment}}</p>
+            <p class = "bg-secondary text-light rounded-pill p-3 ms-5">{{comment.comment}}</p>
         </div>
         {% endfor %}
             
@@ -37,7 +52,7 @@
                 <p class="text-danger">{{error}}</p>
                 <input name = "password" type="password" class="form-control" id="password">
             </div>
-            <button type = "submit" class = "btn btn-success">Войти</button><br>
+            <button type = "submit" name = "check_password" class = "btn btn-success">Войти</button><br>
     </div>
     {% endif %}
 </div>
