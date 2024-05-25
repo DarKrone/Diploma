@@ -158,7 +158,9 @@ def available_lesson(request, lesson_slug):
                 }
                 return render(request, 'main/accesstolesson.html', context)
         elif 'create_comment' in request.POST:
-            if request.session.get(lesson_slug) != True:
+            if request.user.is_superuser:
+                request.session[lesson_slug] = True
+            elif request.session.get(lesson_slug) != True:
                 return render(request, 'main/accesstolesson.html', context)
             comment = CommentsOnLesson()
             comment.lesson = AvailableLessons.objects.get(slug = lesson_slug)
