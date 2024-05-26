@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import FileResponse
-from .models import Lesson, Courses, AvailableLessons, CommentsOnLesson
+from django.http import FileResponse, HttpResponse
+from .models import Lesson, Courses, AvailableLessons, CommentsOnLesson, Question
 from .forms import LessonForm
 from django.http import HttpResponseRedirect, HttpResponseNotFound, FileResponse, Http404
 import random
 import string
+from django.http import JsonResponse
 
 # Главная страница.
 @login_required
@@ -179,6 +180,36 @@ def available_lesson(request, lesson_slug):
         return render(request, 'main/availablelesson.html', context)
     
     return render(request, 'main/accesstolesson.html', context)
+
+def get_quiz(request):
+    try:
+        # question_objs = Question.objects.all()
+        
+        if request.GET.get('lesson'):
+            question_objs = Question.objects.filter(lesson__id = request.GET.get('lesson'))
+            
+        question_objs = list(question_objs)
+        data = []
+        random.shuffle(question_objs)
+        
+        
+        for question_obj in question_objs:
+            
+            data.append({
+                "id" : question_obj.id,
+                "lesson": question_obj.lesson.title,
+                "question": question_obj.question,
+                "marks": question_obj.marks,
+                "answer" : question_obj.get_answers(),
+            })
+
+        payload = {'status': True, 'data': data}
+        
+        return JsonResponse(payload)  # Return JsonResponse
+        
+    except Exception as e:
+        print(e)
+        return HttpResponse("Something went wrong")
 
 @login_required
 def courses(request):

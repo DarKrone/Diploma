@@ -6,6 +6,9 @@
 Открытое занятие
 {% endblock title %}
 
+{% block head_includes %}
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+{% endblock head_includes %}
 
 {% block content %}
 <div class = "container mb-2">
@@ -41,6 +44,78 @@
         </div>
         {% endfor %}
             
+        <div id = "app"> 
+            <ul>
+                <div class="container mt-5 pt-5">
+                    <div class="col-md-6 mx-auto">
+            
+                        
+                            <h3>Опрос по материалу</h3>
+                            <div v-for="question in questions">
+                            <hr>
+                            <p>[[question.question]]</p>
+            
+                        <div class="form-check" v-for="answer in question.answer">
+                            <input @change="checkAnswer($event, question.uid)" :value="answer.answer" :name="answer.answer" class="form-check-input" type="radio"  id="flexRadioDefault1">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                            [[answer.answer]]
+                            </label>
+                        </div>
+                        
+                    
+                        </div> 
+                        </div>
+                    </div>
+                <!-- <li v-for="task in tasks">[[task]]</li> -->
+            </ul>
+        </div>
+        <script>
+            const app = Vue.createApp({
+                el: '#app',
+                delimiters: ['[[', ']]'],
+                data() {
+                return {
+                    lesson: '{{lesson.lesson.id}}',
+                    questions :[]
+                    }
+                },
+                methods : {
+                    getQuestions(){
+                        var _this = this
+                        fetch(`/api/get-quiz/?lesson=${this.lesson}`)
+                        .then(response => response.json())
+                        .then(result =>{
+                            console.log(result)
+                            _this.questions = result.data
+                        })
+                    },
+                    checkAnswer(event, uid){
+        
+                        this.questions.map(question =>{
+                            answer = question.answer
+                            for(var i=0; i<answer.length; i++){
+                                if(answer[i].answer==event.target.value){
+                                    if(answer[i].is_correct){
+                                        console.log('Your answer is correct!')
+                                        alert("Hurray ypur answer is correct !????")
+                                    }else{
+                                        console.log('Your answer is wrong!')
+                                        alert("Better luck next time !????")
+                                    }
+                                }
+                            }
+        
+                        })
+                        console.log(event.target.value  , uid)
+                    }
+                },
+                created() {
+                    this.getQuestions( )
+                 },
+              });
+              
+              app.mount('#app')
+          </script>
     </div>
 </div>
 {% endblock content %}

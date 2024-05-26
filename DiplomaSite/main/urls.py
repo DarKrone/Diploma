@@ -18,4 +18,5 @@ urlpatterns = [
     path('logout/', views.user_logout, name = "logout"),
     path('media/pptxfiles/<str:filename>', views.secure_file_read, name = "download"),
     path('availablelesson/<slug:lesson_slug>', views.available_lesson, name = "available_lesson"),
+    path('api/get-quiz/', views.get_quiz, name = 'get_quiz'),
 ]
