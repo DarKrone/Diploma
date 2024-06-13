@@ -12,7 +12,7 @@
 <a href="create/" class = "h3 mx-auto text-primary">Добавить урок</a>
 {% if lessons.count > 0 %}
 <table class="table mt-3">
-    <thead class = "table-warning"><th>Номер урока</th><th>Название</th> <th>Редактирование</th></thead>
+    <thead class = "table-warning align-middle"><th>Номер урока</th><th>Название</th> <th>Редактирование</th></thead>
     {% for lesson in lessons %}
     <tr>
         <td>{{ lesson.number }}</td>
@@ -26,11 +26,11 @@
 {% endif %}
 {% if available_lessons.count > 0 %}
 <table class="table mt-3">
-    <thead class = "table-warning"><th>Номер доступного урока</th><th>Ссылка на урок</th><th>Пароль к уроку</th><th>Редактирование</th></thead>
+    <thead class = "table-warning align-middle"><th>Номер доступного урока</th><th>Ссылка на урок</th><th>Пароль к уроку</th><th>Редактирование</th></thead>
     {% for lesson in available_lessons %}
     <tr>
         <td>{{ lesson.lesson.number }}</td>
-        <td>http://127.0.0.1:8000/availablelesson/{{ lesson.slug }}</td>
+        <td>{{ lesson.slug }}</td>
         <td>{{ lesson.password }}</td>
         <td>
             <a href="deletelink/{{ lesson.id }}">Удалить</a>

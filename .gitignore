@@ -1,3 +1,4 @@
 /frontend/.vite/
 /frontend/node_modules/
 /frontend/public/
+config.py
